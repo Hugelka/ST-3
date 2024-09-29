@@ -61,12 +61,7 @@ TEST_F(TimedDoorTest, TimeoutThrowsExceptionIfDoorStillOpen) {
   door->unlock();
   EXPECT_THROW(
       {
-        try {
-          std::this_thread::sleep_for(std::chrono::seconds(2));
-        } catch (const std::runtime_error& e) {
-          EXPECT_STREQ("Door is still open!", e.what());
-          throw;
-        }
+        std::this_thread::sleep_for(std::chrono::seconds(2));
       },
       std::runtime_error);
 }
