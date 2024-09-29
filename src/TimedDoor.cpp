@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <thread>  // NOLINT [build/c++11]
 
-// DoorTimerAdapter Implementation
 DoorTimerAdapter::DoorTimerAdapter(TimedDoor& door_) : door(door_) {}
 
 void DoorTimerAdapter::Timeout() {
@@ -15,7 +14,6 @@ void DoorTimerAdapter::Timeout() {
   }
 }
 
-// TimedDoor Implementation
 TimedDoor::TimedDoor(int timeout_)
     : iTimeout(timeout_),
       isOpened(false),
@@ -41,7 +39,6 @@ int TimedDoor::getTimeOut() const { return iTimeout; }
 
 void TimedDoor::throwState() { adapter->Timeout(); }
 
-// Timer Implementation
 void Timer::sleep(int time_) {
   std::this_thread::sleep_for(std::chrono::seconds(time_));
 }

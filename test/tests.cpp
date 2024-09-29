@@ -9,13 +9,11 @@
 
 #include "TimedDoor.h"
 
-// Mock Timer Client
 class MockTimerClient : public TimerClient {
  public:
   MOCK_METHOD(void, Timeout, (), (override));
 };
 
-// Test Fixture for TimedDoor
 class TimedDoorTest : public ::testing::Test {
  protected:
   TimedDoor door;
@@ -31,48 +29,48 @@ class TimedDoorTest : public ::testing::Test {
   }
 };
 
-TEST_F(TimedDoorTest, UNL_D_TH_TIMEOUT) {
+TEST_F(TimedDoorTest, unlockExpectThrow) {
   door.unlock();
   std::this_thread::sleep_for(std::chrono::seconds(door.getTimeOut()));
   EXPECT_THROW(door.throwState(), std::runtime_error);
 }
 
-TEST_F(TimedDoorTest, LOCK_D_TH_UNLOCK) {
+TEST_F(TimedDoorTest, lockExpectNoThrow) {
   std::this_thread::sleep_for(std::chrono::seconds(door.getTimeOut() + 1));
   EXPECT_NO_THROW(door.throwState());
 }
 
-TEST_F(TimedDoorTest, LOCK_BF_TIMEOUT_TH_OPEN) {
+TEST_F(TimedDoorTest, lockBeforeTimeout) {
   std::this_thread::sleep_for(std::chrono::seconds(door.getTimeOut() + 1));
   door.unlock();
   EXPECT_THROW(door.throwState(), std::runtime_error);
 }
 
-TEST_F(TimedDoorTest, UNL_MTH) {
+TEST_F(TimedDoorTest, unlockCheck) {
   door.unlock();
   EXPECT_TRUE(door.isDoorOpened());
 }
 
-TEST_F(TimedDoorTest, LOCK_MTH) {
+TEST_F(TimedDoorTest, lockCheck) {
   door.unlock();
   door.lock();
   EXPECT_FALSE(door.isDoorOpened());
 }
 
-TEST_F(TimedDoorTest, FST_D_CLO) { EXPECT_FALSE(door.isDoorOpened()); }
+TEST_F(TimedDoorTest, isDoorCheck) { EXPECT_FALSE(door.isDoorOpened()); }
 
-TEST_F(TimedDoorTest, UNL_D_TW) {
+TEST_F(TimedDoorTest, unlockCheckThrow) {
   door.unlock();
   EXPECT_THROW(door.unlock(), std::logic_error);
 }
 
-TEST_F(TimedDoorTest, OPEN_EX) {
+TEST_F(TimedDoorTest, checkThrow) {
   door.unlock();
   EXPECT_THROW(door.throwState(), std::runtime_error);
 }
 
-TEST_F(TimedDoorTest, CLO_BF) { EXPECT_NO_THROW(door.throwState()); }
+TEST_F(TimedDoorTest, checkNoThrow) { EXPECT_NO_THROW(door.throwState()); }
 
-TEST_F(TimedDoorTest, LOCK_D_TW) {
+TEST_F(TimedDoorTest, lockCheckThrow) {
   EXPECT_THROW(door.lock(), std::logic_error);
 }
